@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['daneo.vanoverloop@vikingco.com']
   spec.description   = %q{A short description of danger-infer.}
   spec.summary       = %q{A longer description of danger-infer.}
-  spec.homepage      = 'https://github.com/Daneo Van Overloop/danger-infer'
+  spec.homepage      = 'https://github.com/daneov/danger-infer'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files`.split($/)

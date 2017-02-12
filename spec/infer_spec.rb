@@ -2,6 +2,7 @@ require File.expand_path('../spec_helper', __FILE__)
 
 module Danger
   describe Danger::DangerInfer do
+
     it 'should be a plugin' do
       expect(Danger::DangerInfer.new(nil)).to be_a Danger::Plugin
     end
@@ -12,30 +13,24 @@ module Danger
     describe 'with Dangerfile' do
       before do
         @dangerfile = testing_dangerfile
-        @my_plugin = @dangerfile.infer
+        @infer = @dangerfile.infer
+        
+        json = File.read(File.dirname(__FILE__) + '/support/fixtures/gh_pr.json')
+        allow(@infer.github).to receive(:pr_json).and_return(json)
+        
       end
 
       # Some examples for writing tests
-      # You should replace these with your own.
+      # # You should replace these with your own.
 
-      it "Warns on a monday" do
-        monday_date = Date.parse("2016-07-11")
-        allow(Date).to receive(:today).and_return monday_date
+      # it "receives the test_fixture" do
+      #   res = @infer.retrieve_files_from_json(@infer.github)
+      #   expect(res.not.to be_nil)
+      # end
 
-        @my_plugin.warn_on_mondays
-
-        expect(@dangerfile.status_report[:warnings]).to eq(["Trying to merge code on a Monday"])
+      it "receives files" do
+        expect(@infer.changed_files).not_to_be nil
       end
-
-      it "Does nothing on a tuesday" do
-        monday_date = Date.parse("2016-07-12")
-        allow(Date).to receive(:today).and_return monday_date
-
-        @my_plugin.warn_on_mondays
-
-        expect(@dangerfile.status_report[:warnings]).to eq([])
-      end
-
     end
   end
 end
