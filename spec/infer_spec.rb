@@ -1,8 +1,7 @@
 require File.expand_path('../spec_helper', __FILE__)
 
 module Danger
-  describe Danger::DangerInfer do
-
+  RSpec.describe Danger::DangerInfer, host: :github do
     it 'should be a plugin' do
       expect(Danger::DangerInfer.new(nil)).to be_a Danger::Plugin
     end
@@ -14,10 +13,12 @@ module Danger
       before do
         @dangerfile = testing_dangerfile
         @infer = @dangerfile.infer
-        
-        json = File.read(File.dirname(__FILE__) + '/support/fixtures/gh_pr.json')
-        allow(@infer.github).to receive(:pr_json).and_return(json)
-        
+        @git = DangerfileGitPlugin.new @dangerfile
+
+        # fixture_path = '/support/fixtures/gh_pr.json'
+        # cwd = File.read(File.dirname(__FILE__) + fixture_path)
+
+        allow(@git).to receive(:modified_files).and_return([])
       end
 
       # Some examples for writing tests
@@ -28,8 +29,9 @@ module Danger
       #   expect(res.not.to be_nil)
       # end
 
-      it "receives files" do
-        expect(@infer.changed_files).not_to_be nil
+      it 'receives files' do
+        result = @infer.sanitize(%w(Derp derped))
+        expect(result).to eq %w(Derp derped)
       end
     end
   end
