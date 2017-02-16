@@ -26,8 +26,6 @@ module Danger
     # @param files [Array<String>] the files to perform analysis on
     # @param comp_db [String] the compilation_db.json file
     # @return [Array<String>]
-    #
-
     def analyze(files, comp_db)
       if files.class != Array
         raise ArgumentError, "Expecting Array, instead received #{files.class}"
@@ -40,7 +38,6 @@ module Danger
     # Sanitize the paths in the given array
     # @param path_array [Array<String>] paths to remove extranous spaces
     # @return [Array<String>]
-
     def sanitize(path_array)
       path_array.map do |path|
         path = path.gsub(/{(.*) => (.*)}/, '\2')
@@ -51,10 +48,9 @@ module Danger
     private
 
     # Pass infer the appropriate options and let it analyse all the things
-    # @param files [String] files to analyze in "file1.ex,file2.ex" format
+    # @param paths [String] files to analyze in "file1.ex,file2.ex" format
     # @param comp_db [String] json_compilation_database file to analyze
     # @return [Array<String>]
-
     def run_analysis(paths, comp_db)
       Open3.popen2e('infer --sources',
                     "'#{paths}'",
@@ -70,7 +66,6 @@ module Danger
     # Read the given stream and process it as an error
     # @param stdout [String]
     # @return [void]
-
     def handle_error(stdout)
       while (line = stdout.gets)
         puts line
@@ -80,7 +75,6 @@ module Danger
     # Read the given stream and treat it as a successful analysis
     # @param stdout [String]
     # @return [void]
-
     def analysis_succeeded(stdout)
       while (line = stdout.gets)
         puts line
