@@ -1,3 +1,4 @@
+![Build status](https://travis-ci.org/daneov/danger-infer.svg?branch=master)
 # danger-infer
 
 A description of danger-infer.
