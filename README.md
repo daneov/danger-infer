@@ -2,10 +2,19 @@
 # danger-infer
 
 [Infer](https://github.com/facebook/infer) is Facebook's statistical analysis tool for Java, C and Objective-C.
-This plugin allows you to get a summary of those results on your PR, giving you a quick overview of how your codebase is holding up.
-For now I'm focussing on the Objective-C part, but there's nothing here holding you back from contributing  😉
+
+This plugin allows you to get a summary of those results on your PR, giving you a quick overview on how your codebase is holding up.
 
 ## Installation
+
+For now: 
+
+    * Fork this repo
+    * Checkout your forked version 
+    $ gem build danger-infer.gemspec
+    $ gem install danger-infer-x.y.z
+    
+Somehwere in the future: 
 
     $ gem install danger-infer
 
@@ -21,3 +30,5 @@ For now I'm focussing on the Objective-C part, but there's nothing here holding 
 3. Run `bundle exec rake spec` to run the tests.
 4. Use `bundle exec guard` to automatically have tests run as you make changes.
 5. Make your changes.
+
+**N.B**: For now I'm focussing on the Objective-C part, but if you feel like some improvement is needed here, don't hold back and contribute 😉
