@@ -1,5 +1,3 @@
-require 'net/http'
-require 'uri'
 require 'json'
 require 'open3'
 
@@ -22,6 +20,8 @@ module Danger
   # @tags infer, static, analysis
   #
   class DangerInfer < Plugin
+    @output_dir = 'danger-infer'
+    @result_file_name = 'results'
     # Start analysis
     # @param files [Array<String>] the files to perform analysis on
     # @param comp_db [String] the compilation_db.json file
@@ -32,7 +32,8 @@ module Danger
       end
       paths = sanitize(files).join(',')
 
-      run_analysis(paths, comp_db)
+      run_analysis(paths, comp_db, @output_dir)
+      process_analysis(@result_file_name, @output_dir)
     end
 
     # Sanitize the paths in the given array
@@ -45,16 +46,48 @@ module Danger
       end
     end
 
+    # Process successful analysis
+    # @param dir [String] directory in which the file is located
+    # @param result_file_name [String] the json file with the analysis' results
+    # @return [Array<String>]
+    def process_analysis(dir, result_file_name)
+      result_file = File.read("#{dir}/#{result_file_name}")
+      results_json = JSON.parse(result_file)
+
+      amount_errors = results_json.count
+      parsed_json = parse_result_json_to_hash(results_json)
+
+      { 'Count' => amount_errors }.merge(parsed_json)
+    end
+
     private
+
+    # Read the json and extract the info we need
+    # @param results_json [Hash] json with results of the analysis
+    # @return [Hash<Hash<Int>>]
+    def parse_result_json_to_hash(results_json)
+      by_kind = {}
+      results_json.each do |record|
+        record_severity = record['severity'].capitalize
+        record_kind = record['kind'].capitalize
+
+        by_kind[record_kind] ||= {}
+        by_kind[record_kind][record_severity] ||= 0
+
+        by_kind[record_kind][record_severity] += 1
+      end
+
+      by_kind
+    end
 
     # Pass infer the appropriate options and let it analyse all the things
     # @param paths [String] files to analyze in "file1.ex,file2.ex" format
     # @param comp_db [String] json_compilation_database file to analyze
     # @return [Array<String>]
-    def run_analysis(paths, comp_db)
+    def run_analysis(paths, comp_db, output_dir)
       Open3.popen2e('infer --sources',
                     "'#{paths}'",
-                    '--results-dir danger-infer',
+                    "--results-dir #{output_dir}",
                     '--clang-compilation-db-files',
                     "'#{comp_db}'") do |_stdin, stdout_and_stderr, wait_thr|
 
