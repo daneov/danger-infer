@@ -1,7 +1,9 @@
 ![Build status](https://travis-ci.org/daneov/danger-infer.svg?branch=master)
 # danger-infer
 
-A description of danger-infer.
+[Infer](https://github.com/facebook/infer) is Facebook's statistical analysis tool for Java, C and Objective-C.
+This plugin allows you to get a summary of those results on your PR, giving you a quick overview of how your codebase is holding up.
+For now I'm focussing on the Objective-C part, but there's nothing here holding you back from contributing  😉
 
 ## Installation
 
